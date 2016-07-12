@@ -1,7 +1,7 @@
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
-    import="com.plantronics.com.scrape.sfdc.KbArticle"%>
+    import="com.plantronics.scrape.sfdc.KbArticle"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -18,7 +18,7 @@
 		<h1>Support Knowledge Base</h1>
 	</div>
 	
-	<jsp:useBean id="scrape" class="com.plantronics.com.scrape.sfdc.KbArticle" scope="request" />
+	<jsp:useBean id="scrape" class="com.plantronics.scrape.sfdc.KbArticle" scope="request" />
 	
 	<jsp:setProperty name="scrape" property="url" value='<%=request.getParameter("url") %>' />
 	
@@ -54,6 +54,9 @@
 	</form>
 	</div>
 	<br><br>
+	<strong>Search Results:</strong><br>
+			<c:set var="searchResults" value="${scrape.searchResults}" scope="request"/>
+			<c:out value="${searchResults}" escapeXml="false"/><br><br>
 		
 		
 	<div class="large-6 medium 12 columns">

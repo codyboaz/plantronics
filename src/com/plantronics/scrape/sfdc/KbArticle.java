@@ -1,4 +1,4 @@
-package com.plantronics.com.scrape.sfdc;
+package com.plantronics.scrape.sfdc;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -64,26 +64,31 @@ public class KbArticle {
     	catch (Exception e) {
 			log.fatal("URL connection fail, error message: " + e);
 			e.printStackTrace();
+			page = null;
 		}
     }
     
     public String[] getChildren(){
-
-      try{
-	  	  Element div = page.select("div.blockDetail").first();
-	  	  Elements child = div.children();
-	  	  children = new String[child.size()];
-	  	  for(int i = 0; i < child.size(); i++){
-	 		  children[i] = (child.get(i).attr("class"));
-	 	  }
-	  	  log.info("Number of child DIV: " + children.length);
-      }
-      catch(Exception e){
-    	  log.fatal("No child DIV found , error message: " + e);
-    	  e.printStackTrace();
-      }
+    	
+    	if(page == null){
+    		return(children);
+    	}
+    	
+    	try{
+    		Element div = page.select("div.blockDetail").first();
+	  	  	Elements child = div.children();
+	  	  	children = new String[child.size()];
+	  	  	for(int i = 0; i < child.size(); i++){
+	  	  		children[i] = (child.get(i).attr("class"));
+	  	  	}
+	  	 log.info("Number of child DIV: " + children.length);
+    	}
+    	catch(Exception e){
+    		log.error("No child DIV found , error message: " + e);
+    		e.printStackTrace();
+    	}
   
-  	  return(children);
+  	  	return(children);
     }
     
     public String getUrl(){
@@ -92,6 +97,10 @@ public class KbArticle {
     }
     
     public String getId(){
+    	
+    	if(page == null){
+    		return(id);
+    	}
     	
     	try{
 	    	for (Element searchResult : page.select("div.blockMetaData")) {
@@ -108,6 +117,10 @@ public class KbArticle {
     }
     
     public String getTitle(){
+    	
+    	if(page == null){
+    		return(title);
+    	}
     	
     	try{
 	    	for(Element searchResult : page.select("div.blockDetail")) {
@@ -126,6 +139,10 @@ public class KbArticle {
     
     public String getTitle2(){
     	
+    	if(page == null){
+    		return(title2);
+    	}
+    	
     	try{
 	    	for(Element searchResult : page.select("div.blockDetail")) {
 	    		Element div = searchResult.child(3);   
@@ -142,6 +159,10 @@ public class KbArticle {
     }
     
     public String getContent(){
+    	
+    	if(page == null){
+    		return(content);
+    	}
     	
     	try{
 	    	for(Element searchResult : page.select("div.blockDetail")) {
@@ -161,6 +182,10 @@ public class KbArticle {
     
    public String getContent2(){
 	   
+	   if(page == null){
+		   return(content2);
+	   }
+	   
 	   try{
 		   for (Element searchResult : page.select("div.blockDetail")) {
 	    		Element div = searchResult.child(4);
@@ -179,9 +204,11 @@ public class KbArticle {
         
     public String getSearchResults(){
     	
+    	if(page == null){
+    		return(searchResults);
+    	}
+    	
     	try{
-	    	page.select("div.blockPagination").remove();
-	    	page.select("div.blockResults h3").remove();
 	  	    
 	    	for (Element searchResult : page.select("div.blockResults")) {
 	  	    	searchResults = searchResult.html();
@@ -198,6 +225,11 @@ public class KbArticle {
     }
     
     public String getPdf(){
+    	
+    	if(page == null){
+    		return(pdf);
+    	}
+    	
     	try{
     		for(Element searchResult : page.select("div.blockDetail")) {
     			pdf = searchResult.select("a").outerHtml();
@@ -213,6 +245,11 @@ public class KbArticle {
     }
    
     public String getQuestionTitle(){
+    	
+    	if(page == null){
+    		return(questTitle);
+    	}
+    	
     	try{
     		for(Element searchResult : page.select("div.blockDetail")) {
     			Element div = searchResult.child(2);   
@@ -229,6 +266,11 @@ public class KbArticle {
      }
    
    	public String getAnswerTitle(){
+   		
+   		if(page == null){
+   			return(answerTitle);
+   		}
+   		
    		try{
 	   		for(Element searchResult : page.select("div.blockDetail")) {
 		  		Element div = searchResult.child(4);   
@@ -245,6 +287,10 @@ public class KbArticle {
 	  }
    	
    	public String getQuestionContent(){
+   		
+   		if(page == null){
+   			return(questionContent);
+   		}
    		
    		try{
 	   		for(Element searchResult : page.select("div.blockDetail")) {
@@ -263,6 +309,11 @@ public class KbArticle {
    	}
    
    	public String getAnswerContent(){
+   		
+   		if(page == null){
+   			return(answerContent);
+   		}
+   		
    		try{
 	   		for(Element searchResult : page.select("div.blockDetail")) {
 	   			Element div = searchResult.child(5);
@@ -280,7 +331,8 @@ public class KbArticle {
    	}
    
     public String cleanHtml(String html){
-   		Document doc = Jsoup.parse(html);
+   		
+    	Document doc = Jsoup.parse(html);
 	    doc.select("font").unwrap();
 
 	    NodeTraversor traversor  = new NodeTraversor(new NodeVisitor() {
@@ -311,6 +363,10 @@ public class KbArticle {
    
     public String getSearchTitle(){
     	
+    	if(page == null){
+    		return(searchTitle);
+    	}
+    	
     	try{
 	    	for(Element searchResult : page.select("div.blockSearch fieldset")) {
 	 			Element div = searchResult.child(0);
@@ -328,6 +384,10 @@ public class KbArticle {
  	}
    
     public String getArticleType(){
+    	
+    	if(page == null){
+    		return(articleType);
+    	}
     	
     	try{
 	    	for(Element searchResult : page.select("div.blockSearch fieldset")) {
@@ -347,6 +407,10 @@ public class KbArticle {
    
     public String getFamilyType(){
     	
+    	if(page == null){
+    		return(familyType);
+    	}
+    	
     	try{
 	    	for(Element searchResult : page.select("div.blockSearch fieldset")) {
 				Element div = searchResult.child(2);
@@ -364,6 +428,10 @@ public class KbArticle {
  	}
    
     public String getkeywordSearch(){
+    	
+    	if(page == null){
+    		return(keywordSearch);
+    	}
     	
     	try{
 	    	for(Element searchResult : page.select("div.blockSearch fieldset")) {
